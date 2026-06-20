@@ -22,14 +22,13 @@
 
 #include <KPluginFactory>
 
-K_PLUGIN_CLASS_WITH_JSON(Darkly::ConfigurationModule, "darklystyleconfig.json")
-
-#include "darklystyleconfigmodule.moc"
-
 namespace Darkly
 {
 
+K_PLUGIN_CLASS_WITH_JSON(ConfigurationModule, "darklystyleconfig.json")
+
 //_______________________________________________________________________
+
 ConfigurationModule::ConfigurationModule(QObject *parent, const KPluginMetaData &data)
     : KCModule(parent, data)
 {
@@ -60,3 +59,4 @@ void ConfigurationModule::save()
 }
 
 }
+#include "darklystyleconfigmodule.moc"

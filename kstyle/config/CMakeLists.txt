@@ -8,11 +8,19 @@ kconfig_add_kcfg_files(kstyle_darkly_config_PART_SRCS ../darklystyleconfigdata.k
 set(kstyle_darkly_config_PART_FORMS ui/darklystyleconfig.ui)
 ki18n_wrap_ui(kstyle_darkly_config_PART_FORMS_HEADERS ${kstyle_darkly_config_PART_FORMS})
 
-kcoreaddons_add_plugin(darklystyleconfig SOURCES
+add_library(darklystyleconfig MODULE
     ${kstyle_darkly_config_PART_SRCS}
     ${kstyle_darkly_config_PART_FORMS_HEADERS}
-    INSTALL_NAMESPACE "kstyle_config"
 )
+
+set_target_properties(darklystyleconfig PROPERTIES 
+    PREFIX ""
+)
+
+install(TARGETS darklystyleconfig DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/kstyle_config)
+
+
+
 
 target_link_libraries(darklystyleconfig Qt6::Core Qt6::Gui Qt6::Widgets Qt6::DBus)
 target_link_libraries(darklystyleconfig KF6::CoreAddons KF6::ConfigCore KF6::ConfigWidgets KF6::I18n)

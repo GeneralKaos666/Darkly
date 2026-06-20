@@ -56,68 +56,57 @@ set(darkly_PART_SRCS
 kconfig_add_kcfg_files(darkly_PART_SRCS ../kdecoration/darklysettings.kcfgc)
 kconfig_add_kcfg_files(darkly_PART_SRCS darklystyleconfigdata.kcfgc)
 
-add_library(darkly${QT_MAJOR_VERSION} MODULE ${darkly_PART_SRCS})
+add_library(darkly6 MODULE ${darkly_PART_SRCS})
 
 ################# find Qt modules #################
-if(QT_MAJOR_VERSION EQUAL 6)
-    find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
-else()
-    find_package(Qt5 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
-endif()
+find_package(Qt6 REQUIRED COMPONENTS Core Gui Widgets Quick QuickWidgets)
 
 ################# link Qt libraries #################
-target_link_libraries(darkly${QT_MAJOR_VERSION}
+target_link_libraries(darkly6
     PRIVATE
-    Qt${QT_MAJOR_VERSION}::Core
-    Qt${QT_MAJOR_VERSION}::Gui
-    Qt${QT_MAJOR_VERSION}::Widgets
-    Qt${QT_MAJOR_VERSION}::DBus
-    Qt${QT_MAJOR_VERSION}::Quick
+    Qt6::Core
+    Qt6::Gui
+    Qt6::Widgets
+    Qt6::DBus
+    Qt6::Quick
 )
 
 if( DARKLY_HAVE_QTQUICK )
-    target_link_libraries(darkly${QT_MAJOR_VERSION}
+    target_link_libraries(darkly6
         PRIVATE
-            Qt${QT_MAJOR_VERSION}::QuickWidgets
-            KF${QT_MAJOR_VERSION}::CoreAddons
+            Qt6::QuickWidgets
+            KF6::CoreAddons
     )
 endif()
 
 ################# link KDE Frameworks #################
-target_link_libraries(darkly${QT_MAJOR_VERSION}
+target_link_libraries(darkly6
     PRIVATE
-    KF${QT_MAJOR_VERSION}::CoreAddons
-    KF${QT_MAJOR_VERSION}::ConfigCore
-    KF${QT_MAJOR_VERSION}::ConfigGui
-    KF${QT_MAJOR_VERSION}::GuiAddons
-    KF${QT_MAJOR_VERSION}::IconThemes
-    KF${QT_MAJOR_VERSION}::WindowSystem
+    KF6::CoreAddons
+    KF6::ConfigCore
+    KF6::ConfigGui
+    KF6::GuiAddons
+    KF6::IconThemes
+    KF6::WindowSystem
+    KF6::ColorScheme
 )
 
-if(QT_MAJOR_VERSION STREQUAL "5")
-    target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE KF5::ConfigWidgets)
-    if(DARKLY_HAVE_QTQUICK)
-        target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE KF5::Kirigami2)
-    endif()
-else()
-    target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE KF6::ColorScheme)
-    if(DARKLY_HAVE_QTQUICK)
-        target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE KF6::KirigamiPlatform)
-    endif()
+if(DARKLY_HAVE_QTQUICK)
+    target_link_libraries(darkly6 PRIVATE KF6::KirigamiPlatform)
 endif()
 
 ################# link internal library #################
-target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE darklycommon${QT_MAJOR_VERSION})
+target_link_libraries(darkly6 PRIVATE darklycommon6)
 
 ################# KDE style integration #################
-if(KF${QT_MAJOR_VERSION}FrameworkIntegration_FOUND)
-    target_link_libraries(darkly${QT_MAJOR_VERSION} PRIVATE KF${QT_MAJOR_VERSION}::Style)
+if(KF6FrameworkIntegration_FOUND)
+    target_link_libraries(darkly6 PRIVATE KF6::Style)
 endif()
 
 if (WIN32)
     # As stated in https://docs.microsoft.com/en-us/cpp/c-runtime-library/math-constants M_PI only gets defined
     # when if _USE_MATH_DEFINES is defined
-    target_compile_definitions(darkly${QT_MAJOR_VERSION} PRIVATE _USE_MATH_DEFINES _BSD_SOURCE)
+    target_compile_definitions(darkly6 PRIVATE _USE_MATH_DEFINES _BSD_SOURCE)
 endif()
 
 
@@ -127,7 +116,7 @@ if (FOR_FLATPAK)
 else()
     set(LIB_TARGET ${KDE_INSTALL_QTPLUGINDIR}/styles/)
 endif()
-install(TARGETS darkly${QT_MAJOR_VERSION} DESTINATION ${LIB_TARGET})
+install(TARGETS darkly6 DESTINATION ${LIB_TARGET})
 
 if (NOT FOR_FLATPAK)
     install(FILES darkly.themerc  DESTINATION  ${KDE_INSTALL_DATADIR}/kstyle/themes)
@@ -135,9 +124,10 @@ endif()
 
 ########### subdirectories ###############
 
-if (QT_MAJOR_VERSION EQUAL "6" AND TARGET "KF6::KCMUtils" AND NOT FOR_FLATPAK)
+if (TARGET "KF6::KCMUtils" AND NOT FOR_FLATPAK)
     add_subdirectory(config)
 endif()
+
 
 ########### tests ###############
 include(CTest)

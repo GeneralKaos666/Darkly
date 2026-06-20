@@ -16,7 +16,16 @@ ki18n_wrap_ui(darklydecoration_config_SRCS
     ui/darklyexceptionlistwidget.ui
 )
 
-kcoreaddons_add_plugin(kcm_darklydecoration SOURCES kcm_darklydecoration.cpp ${darklydecoration_config_SRCS} INSTALL_NAMESPACE "${KDECORATION_KCM_PLUGIN_DIR}")
+add_library(kcm_darklydecoration MODULE kcm_darklydecoration.cpp ${darklydecoration_config_SRCS})
+
+set_target_properties(kcm_darklydecoration PROPERTIES 
+    PREFIX ""
+)
+
+install(TARGETS kcm_darklydecoration DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/org.kde.kdecoration3.kcm)
+
+
+
 kconfig_add_kcfg_files(kcm_darklydecoration ../darklysettings.kcfgc)
 target_include_directories(kcm_darklydecoration PRIVATE ${CMAKE_SOURCE_DIR}/kdecoration ${CMAKE_BINARY_DIR}/kdecoration/)
 target_link_libraries(kcm_darklydecoration

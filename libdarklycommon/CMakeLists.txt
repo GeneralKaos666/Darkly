@@ -1,8 +1,9 @@
-add_library(darklycommon${QT_MAJOR_VERSION} OBJECT darklyboxshadowrenderer.cpp)
+add_library(darklycommon6 OBJECT darklyboxshadowrenderer.cpp)
 
-set_target_properties(darklycommon${QT_MAJOR_VERSION} PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
+set_target_properties(darklycommon6 PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 
-target_link_libraries(darklycommon${QT_MAJOR_VERSION}
+target_link_libraries(darklycommon6
     PUBLIC
-        Qt${QT_MAJOR_VERSION}::Core
-        Qt${QT_MAJOR_VERSION}::Gui)
+        Qt6::Core
+        Qt6::Gui)
+

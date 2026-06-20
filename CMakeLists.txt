@@ -40,8 +40,7 @@ include(KDEGitCommitHooks)
 include(GtkUpdateIconCache)
 
 option(FOR_FLATPAK "Build Lightly for Flatpak" OFF)
-option(BUILD_QT5 "Build with QT5" ON)
-option(BUILD_QT6 "Build with QT6" ON)
+option(WITH_DECORATIONS "Build Darkly window decorations for KWin" ON)
 
 set(QT_NO_CREATE_VERSIONLESS_TARGETS ON)
 set(QT_NO_CREATE_VERSIONLESS_FUNCTIONS ON)
@@ -50,62 +49,10 @@ if(WIN32 OR APPLE OR FOR_FLATPAK)
     set(WITH_DECORATIONS OFF)
 endif()
 
-function(build_qt5)
-    set(QT_MAJOR_VERSION 5)
-    include(KDEInstallDirs5)
-    include(KDECMakeSettings)
-    option(WITH_DECORATIONS "Build Darkly window decorations for KWin" ON)
-
-    find_package(Qt5 ${QT5_MIN_VERSION} REQUIRED CONFIG COMPONENTS Widgets DBus)
-    find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
-            CoreAddons
-            Config
-            GuiAddons
-            I18n
-            IconThemes
-            WindowSystem)
-        if(NOT WIN32 AND NOT APPLE)
-            find_package(KF5KCMUtils ${KF5_MIN_VERSION})
-            set_package_properties(KF5KCMUtils PROPERTIES
-                TYPE REQUIRED
-                DESCRIPTION "Helps create configuration modules"
-                PURPOSE "KCMUtils used for the configuration modules or the decoration and Qt Style"
-            )
-        endif()
-
-    find_package(Qt5 ${QT5_MIN_VERSION} OPTIONAL_COMPONENTS Quick)
-        if(${Qt5Quick_FOUND})
-        find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS Kirigami2)
-        endif()
-
-    find_package(KF5FrameworkIntegration ${KF5_MIN_VERSION} CONFIG )
-        set_package_properties(KF${QT_MAJOR_VERSION}FrameworkIntegration PROPERTIES
-            DESCRIPTION "KF${QT_MAJOR_VERSION} Framework Integration"
-            URL "https://projects.kde.org/projects/frameworks/frameworkintegration"
-            TYPE OPTIONAL
-            PURPOSE "Required to use KStyle convenience functionalities in style")
-
-    set(DARKLY_HAVE_KSTYLE ${KF5FrameworkIntegration_FOUND})
-    set(DARKLY_HAVE_QTQUICK ${Qt5Quick_FOUND})
-
-
-    #add_subdirectory(colors)
-    add_subdirectory(kstyle kstyle5)
-    add_subdirectory(libdarklycommon libdarklycommon5)
-    #add_subdirectory(misc)
-    unset(QUERY_EXECUTABLE CACHE)
-endfunction()
-if(BUILD_QT5)
-    message("-- **** Build QT5 - On ****")
-    build_qt5()
-endif()
-
 function(build_qt6)
     set(QT_MAJOR_VERSION 6)
     include(KDEInstallDirs6)
     include(KDECMakeSettings)
-
-    option(WITH_DECORATIONS "Build Darkly window decorations for KWin" ON)
 
     find_package(Qt6 ${QT_MIN_VERSION} REQUIRED CONFIG COMPONENTS Widgets DBus)
     find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
@@ -150,8 +97,8 @@ function(build_qt6)
     endif()
 
     #add_subdirectory(colors)
-    add_subdirectory(kstyle kstyle6)
-    add_subdirectory(libdarklycommon libdarklycommon6)
+    add_subdirectory(kstyle)
+    add_subdirectory(libdarklycommon)
     add_subdirectory(${CMAKE_SOURCE_DIR}/desktoptheme ${CMAKE_BINARY_DIR}/desktoptheme_build)
     #add_subdirectory(misc)
 
@@ -176,7 +123,7 @@ function(build_qt6)
     include(ECMSetupVersion)
     ecm_setup_version(${PROJECT_VERSION} VARIABLE_PREFIX DARKLY
                     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/DarklyConfigVersion.cmake"
-                    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kstyle6/config/darklystyleversion.h"
+                    VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/kstyle/config/darklystyleversion.h"
     )
 
 
@@ -199,10 +146,9 @@ function(build_qt6)
     unset(QUERY_EXECUTABLE CACHE)
 endfunction()
 
-if(BUILD_QT6)
-    message("-- **** Build QT6 - On ****")
-    build_qt6()
-endif()
+message("-- **** Build QT6 - On ****")
+build_qt6()
+
 
 function(build_colors)
     include(KDEInstallDirs)

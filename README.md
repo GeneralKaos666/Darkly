@@ -12,6 +12,8 @@ Forked from the ***lightly*** theme, this style brings a fresh and unique look t
 
 ***
 
+only use my fork for Termux!!!!
+
 ### What to expect?
 
 The main goal is to provide a style for **Qt applications**.
@@ -278,7 +280,7 @@ pkg install -y cmake extra-cmake-modules kdecoration kf6-kcoreaddons kf6-kcmutil
 ```
 
 ```bash
-git clone --single-branch --depth=1 https://github.com/Bali10050/Darkly.git
+git clone https://github.com/GeneralKaos666/Darkly
 cd Darkly
 ./install.sh
 ```
